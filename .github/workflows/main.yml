@@ -36,8 +36,8 @@ jobs:
     - name: Print Happy Message for CI Finish
       run : echo "CI Pipeline part Finished succesfully!"
       
-jobs:  
-  ci_pipeline:   
+
+  cd_pipeline:   
     runs-on: ubuntu-latest
     needs: [ci_pipeline]
  
