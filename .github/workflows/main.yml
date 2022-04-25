@@ -18,13 +18,13 @@ jobs:
    
     steps:
     - name: Git clone our repo
-      uses: actions/checkout@v3
+      uses: actions/checkout@v1
     
     - name: Create ZIP feployment package
       run : zip -r ${{ env.DEPLOY_PACKAGE_NAME }} ./ -x *.gut*
       
     - name: Configure My AWS Ceredentials
-      uses: aws-actions/configure-aws-credentials@v3
+      uses: aws-actions/configure-aws-credentials@v1
       with:
         aws-acces-key-id      : ${{ secrets.MY_AWS_ACCESS_KEY }}
         aws-secret-access-key : ${{ secrets.MY_AWS_SECRET_KEY }}
