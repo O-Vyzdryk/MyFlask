@@ -17,7 +17,7 @@ jobs:
       #   run: echo "STAGE=$(if [[ "${{ github.ref }}" == 'refs/heads/development' ]]; then echo staging; elif [[ "${{ github.ref }}" == 'refs/heads/main' ]]; then echo prod; fi)" >> $GITHUB_ENV
 
       - name: Print STAGE
-        run: echo ${{ env.ENV_1 }}
+        run: echo "Hello ${{ env.ENV_1 }}"
       
       - name: Print STAGE
         run: echo ${{ env.ENV_2 }}
