@@ -27,8 +27,10 @@ jobs:
             HostName ${{ vars.SSH_HOST }}
             User ${{ vars.SSH_USER }}
             IdentityFile ~/.ssh/${{ env.STAGE }}.key
-            StrictHostKeyChecking no
+            IdentitiesOnly yes
+            # StrictHostKeyChecking no
           END
 
       - name: Stop the server
-        run: ssh ${{ env.STAGE }} "pwd && cd /var/www/bonzo && ls -la"
+        run: |
+          ssh ${{ env.STAGE }} "pwd && cd /var/www/bonzo && ls -la"
