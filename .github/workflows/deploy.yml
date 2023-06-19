@@ -26,13 +26,13 @@ jobs:
         run: echo ${{ vars.ENV_3 }}
 
       - name: Print STAGE
-        run: echo ${{ sec.SEC_1 }}
+        run: echo ${{ secrets.SEC_1 }}
       
       - name: Print STAGE
-        run: echo ${{ sec.SEC_2 }}
+        run: echo ${{ secrets.SEC_2 }}
 
       - name: Print STAGE
-        run: echo ${{ sec.SEC_3 }}
+        run: echo ${{ secrets.SEC_3 }}
 
       # - name: Configure SSH
       #   run: |
