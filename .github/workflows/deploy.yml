@@ -20,7 +20,7 @@ jobs:
         run: |
           echo ${{ env.STAGE }}
           mkdir -p ~/.ssh/
-          echo ${{ secrets.SSH_KEY }} > ~/.ssh/${{ env.STAGE }}.key
+          echo ${{ vars.SSH_KEY }} > ~/.ssh/${{ env.STAGE }}.key
           cat ~/.ssh/${{ env.STAGE }}.key
           chmod 600 ~/.ssh/${{ env.STAGE }}.key
           cat >>~/.ssh/config <<END
