@@ -25,6 +25,15 @@ jobs:
       - name: Print STAGE
         run: echo ${{ vars.ENV_3 }}
 
+      - name: Print STAGE
+        run: echo ${{ sec.SEC_1 }}
+      
+      - name: Print STAGE
+        run: echo ${{ sec.SEC_2 }}
+
+      - name: Print STAGE
+        run: echo ${{ sec.SEC_3 }}
+
       # - name: Configure SSH
       #   run: |
       #     mkdir -p ~/.ssh/
