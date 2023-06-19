@@ -30,43 +30,5 @@ jobs:
             StrictHostKeyChecking no
           END
 
-      - name: Print STAGE
-        run: echo ${{ vars.ENV_1 }}
-      
-      - name: Print STAGE
-        run: echo ${{ vars.ENV_2 }}
-
-      - name: Print STAGE
-        run: echo ${{ vars.ENV_3 }}
-
-      - name: Print STAGE
-        run: echo ${{ secrets.SEC_1 }}
-      
-      - name: Print STAGE
-        run: echo ${{ secrets.SEC_2 }}
-
-      - name: Print STAGE
-        run: echo ${{ secrets.SEC_3 }}
-
-      # - name: Configure SSH
-      #   run: |
-      #     mkdir -p ~/.ssh/
-      #     echo "${{ secrets[env.STAGE+'_SSH_KEY'] }}" > ~/.ssh/${{ env.STAGE }}.key
-      #     chmod 600 ~/.ssh/${{ env.STAGE }}.key
-      #     cat >>~/.ssh/config <<END
-      #     Host ${{ env.STAGE }}
-      #       HostName ${{ secrets[env.STAGE+'_SSH_HOST'] }}
-      #       User ${{ secrets[env.STAGE+'_SSH_USER'] }}
-      #       IdentityFile ~/.ssh/${{ env.STAGE }}.key
-      #       StrictHostKeyChecking no
-      #     END
-
-      # - name: Stop the server
-      #   run: ssh ${{ env.STAGE }} 'sudo systemctl stop my-application'
-
-      # - name: Check out the source
-      #   run: ssh ${{ env.STAGE }} 'cd my-application && git fetch && git reset --hard origin/master'
-
-      # - name: Start the server
-      #   if: ${{ always() }}
-      #   run: ssh ${{ env.STAGE }} 'sudo systemctl start my-application'
+      - name: Stop the server
+        run: ssh ${{ env.STAGE }} 'pwd && cd /var/www/bonzo && ls -la'
