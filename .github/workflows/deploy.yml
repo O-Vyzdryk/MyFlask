@@ -24,9 +24,9 @@ jobs:
           username: ${{ vars.SSH_USER }}
           key: ${{ vars.SSH_KEY }}
           script: |
+            echo $GITHUB_SHA
             pwd
-            cd /var/www/bonzo && ls -la
-            mkdir /var/www/bonzo/releases/$GITHUB_SHA
+            cd /var/www/bonzo && ls -la && mkdir $GITHUB_SHA && ls -la
 
       - name: copy file via ssh password
         uses: appleboy/scp-action@v0.1.4
