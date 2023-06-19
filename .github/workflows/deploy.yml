@@ -19,7 +19,6 @@ jobs:
       - name: List 
         run: pwd && ls -la
         
-
       # - name: Set environment variable STAGE
       #   run: echo "STAGE=$(if [[ "${{ github.ref }}" == 'refs/heads/development' ]]; then echo staging; elif [[ "${{ github.ref }}" == 'refs/heads/main' ]]; then echo prod; fi)" >> $GITHUB_ENV
       
@@ -34,8 +33,7 @@ jobs:
           username: ${{ vars.SSH_USER }}
           key: ${{ vars.SSH_KEY }}
           script: |
-            echo $SHA_SHORT
-            
+            echo ${{ env.SHA_SHORT }}            
 
       - name: copy file via ssh password
         uses: appleboy/scp-action@v0.1.4
@@ -44,7 +42,7 @@ jobs:
           username: ${{ vars.SSH_USER }}
           key: '${{ vars.SSH_KEY }}'
           source: "*"
-          target: /var/www/bonzo/releases/$SHA_SHORT
+          target: /var/www/bonzo/releases/${{ env.SHA_SHORT }}
 
       # - name: ssh scp ssh pipelines
       #   uses: cross-the-world/ssh-scp-ssh-pipelines@latest
