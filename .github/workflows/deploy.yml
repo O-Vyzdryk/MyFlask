@@ -13,14 +13,14 @@ jobs:
       name: ${{ github.ref == 'refs/heads/development' && 'staging' || 'prod' }}
     runs-on: ubuntu-latest
     steps:
-    
+
       - name: Set environment variable STAGE
         run: echo "STAGE=$(if [[ "${{ github.ref }}" == 'refs/heads/development' ]]; then echo staging; elif [[ "${{ github.ref }}" == 'refs/heads/main' ]]; then echo prod; fi)" >> $GITHUB_ENV
       
       - name: Configure SSH
         run: |
           mkdir -p ~/.ssh/
-          echo ${{ vars.SSH_KEY }} > ~/.ssh/${{ env.STAGE }}.key
+          echo "${{ vars.SSH_KEY }}" > ~/.ssh/${{ env.STAGE }}.key
           chmod 600 ~/.ssh/${{ env.STAGE }}.key
           cat >>~/.ssh/config <<END
           Host ${{ env.STAGE }}
