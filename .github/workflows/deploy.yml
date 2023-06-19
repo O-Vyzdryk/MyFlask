@@ -16,55 +16,33 @@ jobs:
 
       - name: Set environment variable STAGE
         run: echo "STAGE=$(if [[ "${{ github.ref }}" == 'refs/heads/development' ]]; then echo staging; elif [[ "${{ github.ref }}" == 'refs/heads/main' ]]; then echo prod; fi)" >> $GITHUB_ENV
-      
-      - uses: actions/checkout@v2
+            
+      - name: executing remote ssh commands using password
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ vars.SSH_HOST }}
+          username: ${{ vars.SSH_USER }}
+          key: ${{ vars.SSH_KEY }}
+          script: |
+            pwd
+            cd /var/www/bonzo && ls -la
 
-      - name: Configure SSH
-        run: |
-          echo ${{ env.STAGE }}
-          mkdir -p ~/.ssh/
-          echo "${{ vars.SSH_KEY }}" > ~/.ssh/${{ env.STAGE }}.key
-          chmod 600 ~/.ssh/${{ env.STAGE }}.key
-          cat >>~/.ssh/config <<END
-          Host ${{ env.STAGE }}
-            HostName ${{ vars.SSH_HOST }}
-            User ${{ vars.SSH_USER }}
-            IdentityFile ~/.ssh/${{ env.STAGE }}.key
-            StrictHostKeyChecking no
-          END
+      - name: ssh scp ssh pipelines
+        uses: cross-the-world/ssh-scp-ssh-pipelines@latest
+        env:
+          WELCOME: "ssh scp ssh pipelines"
+          LASTSSH: "Doing something after copying"
+        with:
+          host: ${{ vars.SSH_HOST }}
+          user: ${{ vars.SSH_USER }}
+          key:  ${{ vars.SSH_KEY }}
+          first_ssh: |
+            ls -la  /var/www/bonzo
+            mkdir /var/www/bonzo/releases/$GITHUB_SHA
+          scp: |
+            './.github/workflows/*' => /var/www/bonzo/releases/$GITHUB_SHA
+            './templates/index.html' => /var/www/bonzo/releases/$GITHUB_SHA
+            'README.md' => /var/www/bonzo/releases/$GITHUB_SHA
+          last_ssh: |
+            ls -la /var/www/bonzo/releases/$GITHUB_SHA
 
-      - name: Download Artifacts into Environment
-        run: |
-          ssh ${{ env.STAGE }} 'pwd'
-
-      - name: Deploy Web Artifact to Environment 
-        run: |
-           ssh ${{ env.STAGE }} 'cd /var/www/bonzo && ls -la'
-
-
-      # - name: executing remote ssh commands using password
-      #   uses: appleboy/ssh-action@master
-      #   with:
-      #     host: ${{ vars.SSH_HOST }}
-      #     username: ${{ vars.SSH_USER }}
-      #     key: ${{ vars.SSH_KEY }}
-      #     script: |
-      #       pwd
-      #       cd /var/www/bonzo && ls -la
-
-      # - name: Configure SSH
-      #   run: |
-      #     mkdir -p ~/.ssh/
-      #     echo "${{ vars.SSH_KEY }}" > ~/.ssh/${{ env.STAGE }}.key
-      #     chmod 600 ~/.ssh/${{ env.STAGE }}.key
-      #     cat >>~/.ssh/config <<END
-      #     Host ${{ env.STAGE }}
-      #       HostName ${{ vars.SSH_HOST }}
-      #       User ${{ vars.SSH_USER }}
-      #       IdentityFile ~/.ssh/${{ env.STAGE }}.key
-      #       StrictHostKeyChecking no
-      #     END
-
-      # - name: Stop the server
-      #   run: |
-      #     ssh ${{ env.STAGE }} "pwd && cd /var/www/bonzo && ls -la"
