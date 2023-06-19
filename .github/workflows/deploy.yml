@@ -16,7 +16,13 @@ jobs:
 
       - name: Set environment variable STAGE
         run: echo "STAGE=$(if [[ "${{ github.ref }}" == 'refs/heads/development' ]]; then echo staging; elif [[ "${{ github.ref }}" == 'refs/heads/main' ]]; then echo prod; fi)" >> $GITHUB_ENV
-            
+      - name: Set outputs
+        id: vars
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+      - name: Check outputs
+        run: echo ${{ steps.vars.outputs.sha_short }}
+
       - name: executing remote ssh commands using password
         uses: appleboy/ssh-action@master
         with:
@@ -26,7 +32,7 @@ jobs:
           script: |
             echo $GITHUB_SHA
             pwd
-            cd /var/www/bonzo && ls -la && mkdir $GITHUB_SHA && ls -la
+            cd /var/www/bonzo && ls -la && mkdir ${{ steps.vars.outputs.sha_short }} && ls -la
 
       - name: copy file via ssh password
         uses: appleboy/scp-action@v0.1.4
@@ -35,7 +41,7 @@ jobs:
           username: ${{ vars.SSH_USER }}
           key: '${{ vars.SSH_KEY }}'
           source: "*"
-          target: /var/www/bonzo/releases/$GITHUB_SHA
+          target: /var/www/bonzo/releases/${{ steps.vars.outputs.sha_short }}
 
       # - name: ssh scp ssh pipelines
       #   uses: cross-the-world/ssh-scp-ssh-pipelines@latest
