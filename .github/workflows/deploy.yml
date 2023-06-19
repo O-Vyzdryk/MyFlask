@@ -26,23 +26,33 @@ jobs:
           script: |
             pwd
             cd /var/www/bonzo && ls -la
-
-      - name: ssh scp ssh pipelines
-        uses: cross-the-world/ssh-scp-ssh-pipelines@latest
-        env:
-          WELCOME: "ssh scp ssh pipelines"
-          LASTSSH: "Doing something after copying"
-        with:
-          host: '${{ vars.SSH_HOST }}'
-          user: '${{ vars.SSH_USER }}'
-          key: '${{ vars.SSH_KEY }}'
-          first_ssh: |
-            ls -la  /var/www/bonzo
             mkdir /var/www/bonzo/releases/$GITHUB_SHA
-          scp: |
-            './.github/workflows/*' => /var/www/bonzo/releases/$GITHUB_SHA
-            './templates/index.html' => /var/www/bonzo/releases/$GITHUB_SHA
-            'README.md' => /var/www/bonzo/releases/$GITHUB_SHA
-          last_ssh: |
-            ls -la /var/www/bonzo/releases/$GITHUB_SHA
+
+      - name: copy file via ssh password
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ vars.SSH_HOST }}
+          username: ${{ vars.SSH_USER }}
+          key: '${{ vars.SSH_KEY }}'
+          source: "*"
+          target: /var/www/bonzo/releases/$GITHUB_SHA
+
+      # - name: ssh scp ssh pipelines
+      #   uses: cross-the-world/ssh-scp-ssh-pipelines@latest
+      #   env:
+      #     WELCOME: "ssh scp ssh pipelines"
+      #     LASTSSH: "Doing something after copying"
+      #   with:
+      #     host: '${{ vars.SSH_HOST }}'
+      #     user: '${{ vars.SSH_USER }}'
+      #     key: '${{ vars.SSH_KEY }}'
+      #     first_ssh: |
+      #       ls -la  /var/www/bonzo
+      #       mkdir /var/www/bonzo/releases/$GITHUB_SHA
+      #     scp: |
+      #       './.github/workflows/*' => /var/www/bonzo/releases/$GITHUB_SHA
+      #       './templates/index.html' => /var/www/bonzo/releases/$GITHUB_SHA
+      #       'README.md' => /var/www/bonzo/releases/$GITHUB_SHA
+      #     last_ssh: |
+      #       ls -la /var/www/bonzo/releases/$GITHUB_SHA
 
